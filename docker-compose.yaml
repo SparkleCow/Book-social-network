@@ -1,0 +1,32 @@
+services:
+  mysql:
+    container_name: mysql-db-bsn
+    image: mysql:latest
+    environment:
+      - MYSQL_DATABASE=bsn
+      - MYSQL_PASSWORD=12345
+      - MYSQL_ROOT_PASSWORD=12345
+      - MYSQL_USER=sparklecow
+    ports:
+      - 3306:3306
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - spring-network
+    restart: unless-stopped
+
+  mail-dev:
+    container_name: mail-dev-bsn
+    image: maildev/maildev
+    ports:
+      - 1025:1025
+      - 1080:1080
+
+
+
+networks:
+  spring-network:
+    driver: bridge
+volumes:
+    dbdata:
+      driver: local

@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/books
+    username: sparklecow
+    password: 12345
+    driver-class-name: com.mysql.jdbc.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format-sql: true
+
+  mail:
+    host: localhost
+    port: 1015
+    username: sparklecow
+    password: sparklecow
+    properties:
+      smtp:
+        trust: "*"
+      auth: true
+      starttls:
+        enable: true
+      connectiontimeout: 5000
+      timeout: 3000
+      writetimeput: 5000
