@@ -20,9 +20,9 @@ import java.util.function.Function;
 public class JwtUtils {
 
     @Value("${application.security.jwt.secret-key}")
-    private String JWT_SECRET;
+    private String jwtSecret;
     @Value("${application.security.jwt.expiration}")
-    private Long JWT_EXPIRATION;
+    private Long jwtExpiration;
 
     public String createToken(UserDetails userDetails){
         return createToken(new HashMap<>(), userDetails);
@@ -42,7 +42,7 @@ public class JwtUtils {
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSignKey())
                 .compact();
     }
@@ -65,7 +65,7 @@ public class JwtUtils {
     }
 
     public Key getSignKey(){
-        byte[] keyBytes = Decoders.BASE64.decode(JWT_SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
