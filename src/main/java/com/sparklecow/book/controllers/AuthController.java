@@ -2,6 +2,10 @@ package com.sparklecow.book.controllers;
 
 import com.sparklecow.book.dto.user.UserLoginDto;
 import com.sparklecow.book.dto.user.UserRegisterDto;
+import com.sparklecow.book.exceptions.ExpiredTokenException;
+import com.sparklecow.book.exceptions.RoleNameNotFoundException;
+import com.sparklecow.book.exceptions.TokenNotFoundException;
+import com.sparklecow.book.exceptions.ValidatedTokenException;
 import com.sparklecow.book.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
@@ -18,7 +22,8 @@ public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> register(@RequestBody UserRegisterDto userRegisterDto) throws MessagingException {
+    public ResponseEntity<HttpStatus> register(@RequestBody UserRegisterDto userRegisterDto) throws MessagingException,
+                                                                                             RoleNameNotFoundException {
         authenticationService.register(userRegisterDto);
         return ResponseEntity.ok().build();
     }
@@ -29,7 +34,10 @@ public class AuthController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<HttpStatus> validate(@RequestParam String token) throws MessagingException {
+    public ResponseEntity<HttpStatus> validate(@RequestParam String token) throws MessagingException,
+                                                                           TokenNotFoundException,
+                                                                           ValidatedTokenException,
+                                                                           ExpiredTokenException {
         authenticationService.validateToken(token);
         return ResponseEntity.ok().build();
     }

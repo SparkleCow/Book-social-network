@@ -6,7 +6,10 @@ import com.sparklecow.book.dto.user.UserRegisterDto;
 import com.sparklecow.book.entities.Role;
 import com.sparklecow.book.entities.Token;
 import com.sparklecow.book.entities.User;
+import com.sparklecow.book.exceptions.ExpiredTokenException;
+import com.sparklecow.book.exceptions.RoleNameNotFoundException;
 import com.sparklecow.book.exceptions.TokenNotFoundException;
+import com.sparklecow.book.exceptions.ValidatedTokenException;
 import com.sparklecow.book.models.EmailTemplateName;
 import com.sparklecow.book.repositories.RoleRepository;
 import com.sparklecow.book.repositories.TokenRepository;
@@ -23,7 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.management.relation.RoleNotFoundException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,9 +54,9 @@ public class AuthService implements AuthenticationService{
         return jwtUtils.createToken(user);
     }
     @Override
-    public void register(UserRegisterDto userRegisterDto) throws MessagingException {
+    public void register(UserRegisterDto userRegisterDto) throws MessagingException, RoleNameNotFoundException {
         Role role = roleRepository.findByName("USER").orElseThrow( ()->
-                new RoleNotFoundException("Role with name USER not found"));
+                new RoleNameNotFoundException("Role with name USER not found"));
         //Handle error
         User user = User.builder()
                 .firstName(userRegisterDto.firstName())
@@ -103,14 +105,15 @@ public class AuthService implements AuthenticationService{
 
     @Override
     @Transactional
-    public void validateToken(String token) throws MessagingException {
-        Token tokenResult = tokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException(""));
+    public void validateToken(String token) throws MessagingException, TokenNotFoundException, ValidatedTokenException, ExpiredTokenException {
+        Token tokenResult = tokenRepository.findByToken(token).orElseThrow(()->
+                new TokenNotFoundException("Token not found"));
         if(tokenResult.getValidatedAt()!=null){
-            throw new RuntimeException("token has been validated before");
+            throw new ValidatedTokenException("token has been validated before");
         }
         if(tokenResult.getExpiresAt().isBefore(LocalDateTime.now())){
             sendValidation(tokenResult.getUser());
-            throw new RuntimeException("token has expired");
+            throw new ExpiredTokenException("token has expired");
         }
         tokenResult.setValidatedAt(LocalDateTime.now());
         User user = tokenResult.getUser();
