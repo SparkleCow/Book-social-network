@@ -1,10 +1,12 @@
 package com.sparklecow.book.services;
 
+import com.sparklecow.book.config.jwt.JwtUtils;
 import com.sparklecow.book.dto.user.UserLoginDto;
 import com.sparklecow.book.dto.user.UserRegisterDto;
 import com.sparklecow.book.entities.Role;
 import com.sparklecow.book.entities.Token;
 import com.sparklecow.book.entities.User;
+import com.sparklecow.book.exceptions.TokenNotFoundException;
 import com.sparklecow.book.models.EmailTemplateName;
 import com.sparklecow.book.repositories.RoleRepository;
 import com.sparklecow.book.repositories.TokenRepository;
@@ -12,9 +14,16 @@ import com.sparklecow.book.repositories.UserRepository;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.RoleNotFoundException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,21 +37,30 @@ public class AuthService implements AuthenticationService{
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
     private final EmailService emailService;
+    private final JwtUtils jwtUtils;
+    private final AuthenticationManager authenticationManager;
     @Value("${application.activation-url}")
     private String activationUrl;
 
     @Override
-    public String login(UserLoginDto userLoginDto) {
-        return null;
+    public String login(UserLoginDto userLoginDto) throws AuthenticationException {
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                userLoginDto.email(), userLoginDto.password());
+        authenticationManager.authenticate(authToken);
+        UserDetails user = userRepository.findByEmail(userLoginDto.email()).orElseThrow(()->
+                new UsernameNotFoundException("User with email or username "+userLoginDto.email()+" not found"));
+        return jwtUtils.createToken(user);
     }
     @Override
     public void register(UserRegisterDto userRegisterDto) throws MessagingException {
-        Role role = roleRepository.findByName("USER").orElseThrow( ()-> new RuntimeException(""));
+        Role role = roleRepository.findByName("USER").orElseThrow( ()->
+                new RoleNotFoundException("Role with name USER not found"));
+        //Handle error
         User user = User.builder()
                 .firstName(userRegisterDto.firstName())
                 .lastName(userRegisterDto.lastName())
-                .email(passwordEncoder.encode(userRegisterDto.email()))
-                .password(userRegisterDto.password())
+                .email(userRegisterDto.email())
+                .password(passwordEncoder.encode(userRegisterDto.password()))
                 .accountLocked(false)
                 .roles(List.of(role))
                 .enabled(false)
@@ -81,5 +99,23 @@ public class AuthService implements AuthenticationService{
             token.append(characters.charAt(randomIndex));
         }
         return token.toString();
+    }
+
+    @Override
+    @Transactional
+    public void validateToken(String token) throws MessagingException {
+        Token tokenResult = tokenRepository.findByToken(token).orElseThrow(()-> new RuntimeException(""));
+        if(tokenResult.getValidatedAt()!=null){
+            throw new RuntimeException("token has been validated before");
+        }
+        if(tokenResult.getExpiresAt().isBefore(LocalDateTime.now())){
+            sendValidation(tokenResult.getUser());
+            throw new RuntimeException("token has expired");
+        }
+        tokenResult.setValidatedAt(LocalDateTime.now());
+        User user = tokenResult.getUser();
+        user.setEnabled(true);
+        userRepository.save(user);
+        tokenRepository.save(tokenResult);
     }
 }

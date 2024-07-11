@@ -8,10 +8,7 @@ import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,5 +26,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginDto){
         return ResponseEntity.ok(authenticationService.login(userLoginDto));
+    }
+
+    @PostMapping("/validate")
+    public ResponseEntity<HttpStatus> validate(@RequestParam String token) throws MessagingException {
+        authenticationService.validateToken(token);
+        return ResponseEntity.ok().build();
     }
 }

@@ -15,7 +15,7 @@ spring:
 
   mail:
     host: localhost
-    port: 1015
+    port: 1025
     username: sparklecow
     password: sparklecow
     properties:
