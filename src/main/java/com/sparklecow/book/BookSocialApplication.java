@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import java.util.Optional;
 
 @SpringBootApplication
-@EnableJpaAuditing
+@EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableAsync
 public class BookSocialApplication {
 

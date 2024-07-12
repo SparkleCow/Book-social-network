@@ -1,9 +1,11 @@
 package com.sparklecow.book.config.security;
 
+import com.sparklecow.book.config.ApplicationAuditAware;
 import com.sparklecow.book.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -15,9 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class SecurityUtils {
+public class BeansConfig {
 
     private final UserRepository userRepository;
+
+    @Bean
+    public AuditorAware<Integer> auditorAware() {
+        return new ApplicationAuditAware();
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
