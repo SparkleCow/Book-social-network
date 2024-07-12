@@ -1,6 +1,7 @@
-package com.sparklecow.book.entities;
+package com.sparklecow.book.entities.role;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparklecow.book.entities.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,8 @@
-package com.sparklecow.book.entities;
+package com.sparklecow.book.entities.user;
 
+import com.sparklecow.book.entities.book.Book;
+import com.sparklecow.book.entities.bookTransaction.BookTransactionHistory;
+import com.sparklecow.book.entities.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +52,10 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
     private boolean enabled;
     private boolean accountLocked;
+    @OneToMany(mappedBy = "owner")
+    private List<Book> books = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    private List<BookTransactionHistory> bookTransactionHistories = new ArrayList<>();
 
     @Override
     public String getName() {

@@ -10,7 +10,7 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - dbdata:/var/lib/mysql
+      - new_dbdata:/var/lib/mysql
     networks:
       - spring-network
     restart: unless-stopped
@@ -22,11 +22,9 @@ services:
       - 1025:1025
       - 1080:1080
 
-
-
 networks:
   spring-network:
     driver: bridge
 volumes:
-    dbdata:
-      driver: local
+  new_dbdata:
+    driver: local

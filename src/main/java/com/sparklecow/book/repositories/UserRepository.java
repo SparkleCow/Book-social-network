@@ -1,6 +1,6 @@
 package com.sparklecow.book.repositories;
 
-import com.sparklecow.book.entities.User;
+import com.sparklecow.book.entities.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

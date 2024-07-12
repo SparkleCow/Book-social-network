@@ -1,5 +1,6 @@
-package com.sparklecow.book.entities;
+package com.sparklecow.book.entities.token;
 
+import com.sparklecow.book.entities.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

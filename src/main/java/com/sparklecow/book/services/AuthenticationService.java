@@ -2,7 +2,7 @@ package com.sparklecow.book.services;
 
 import com.sparklecow.book.dto.user.UserLoginDto;
 import com.sparklecow.book.dto.user.UserRegisterDto;
-import com.sparklecow.book.entities.User;
+import com.sparklecow.book.entities.user.User;
 import com.sparklecow.book.exceptions.ExpiredTokenException;
 import com.sparklecow.book.exceptions.RoleNameNotFoundException;
 import com.sparklecow.book.exceptions.TokenNotFoundException;
