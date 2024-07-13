@@ -113,4 +113,15 @@ public class ControllerAdvice {
                         .message(e.getMessage())
                         .build());
     }
+
+    @ExceptionHandler(IllegalOperationException.class)
+    public ResponseEntity<ExceptionResponse> handleIllegalOperationException(IllegalOperationException e){
+        return ResponseEntity
+                .status(ILLEGAL_OPERATION.getHttpStatus())
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(ILLEGAL_OPERATION.getErrorCode())
+                        .businessErrorDescription(ILLEGAL_OPERATION.getMessage())
+                        .message(e.getMessage())
+                        .build());
+    }
 }

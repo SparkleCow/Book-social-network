@@ -19,7 +19,8 @@ public enum BusinessErrorCodes {
     TOKEN_ALREADY_VALIDATE(400, HttpStatus.BAD_REQUEST, "Token has been validate before"),
     INTERNAL_SERVER_ERROR(500, HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error"),
     MESSAGE_ERROR(500,  HttpStatus.INTERNAL_SERVER_ERROR, "Error sending message"),
-    ROLE_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Role not found");
+    ROLE_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Role not found"),
+    ILLEGAL_OPERATION(403, HttpStatus.FORBIDDEN, "Illegal operation");
 
     private final int errorCode;
     private final HttpStatus httpStatus;
