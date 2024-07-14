@@ -1,10 +1,11 @@
-package com.sparklecow.book.services.Mappers;
+package com.sparklecow.book.services.mappers;
 
 import com.sparklecow.book.dto.book.BookRequestDto;
 import com.sparklecow.book.dto.book.BookResponseDto;
 import com.sparklecow.book.dto.book.BorrowedBookResponse;
 import com.sparklecow.book.entities.book.Book;
 import com.sparklecow.book.entities.bookTransaction.BookTransactionHistory;
+import com.sparklecow.book.services.file.FileUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,7 @@ public class BookMapper {
                 .owner(book.getOwner().getFullName())
                 .archived(book.isArchived())
                 .shareable(book.isShareable())
-                //.cover() TODO
+                .cover(FileUtils.readFileFromLocation(book.getBookCover()))
                 .build();
     }
 

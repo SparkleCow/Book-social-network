@@ -41,7 +41,7 @@ public class AuthService implements AuthenticationService{
     private final EmailService emailService;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    @Value("${application.activation-url}")
+    @Value("${application.mailing.activation-url}")
     private String activationUrl;
 
     @Override

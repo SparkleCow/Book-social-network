@@ -7,12 +7,14 @@ import com.sparklecow.book.exceptions.IllegalOperationException;
 import com.sparklecow.book.exceptions.OperationNotPermittedException;
 import com.sparklecow.book.models.PageResponse;
 import com.sparklecow.book.services.BookService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,5 +92,31 @@ public class BookController {
             Authentication connectedUser) throws IllegalOperationException, OperationNotPermittedException {
         return ResponseEntity.ok(bookService.borrowBook(bookId, connectedUser));
     }
+
+    @PatchMapping("/borrow/return/{id}")
+    public ResponseEntity<Integer> returnBorrowedBook(
+            @PathVariable("id") Integer bookId,
+            Authentication connectedUser) throws IllegalOperationException, OperationNotPermittedException {
+        return ResponseEntity.ok(bookService.returnBorrowedBook(bookId, connectedUser));
+    }
+
+    @PatchMapping("/borrow/return/approve/{id}")
+    public ResponseEntity<Integer> approveReturnBorrowedBook(
+            @PathVariable("id") Integer bookId,
+            Authentication connectedUser) throws IllegalOperationException, OperationNotPermittedException {
+        return ResponseEntity.ok(bookService.approveReturnBorrowedBook(bookId, connectedUser));
+    }
+
+    @PostMapping(value="/cover/{id}", consumes="multipart/form-data")
+    public ResponseEntity<?> uploadBookCoverPicture(
+            @PathVariable("id") Integer bookId,
+            @Parameter()
+            @RequestPart("file") MultipartFile file,
+            Authentication connectedUser
+    ){
+        bookService.uploadBookCoverPicture(bookId, file, connectedUser);
+        return ResponseEntity.accepted().build();
+    }
+
 
 }

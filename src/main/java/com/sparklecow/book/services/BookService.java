@@ -11,7 +11,8 @@ import com.sparklecow.book.exceptions.OperationNotPermittedException;
 import com.sparklecow.book.models.PageResponse;
 import com.sparklecow.book.repositories.BookRepository;
 import com.sparklecow.book.repositories.BookTransactionHistoryRepository;
-import com.sparklecow.book.services.Mappers.BookMapper;
+import com.sparklecow.book.services.file.FileStorageService;
+import com.sparklecow.book.services.mappers.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -27,10 +29,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookService {
     private static final String CREATED_DATE = "createdDate";
+    private static final String BOOK_NOT_FOUND = "Book not found with id: ";
 
     private final BookTransactionHistoryRepository bookTransactionRepository;
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final FileStorageService fileStorageService;
+
     public Integer saveBook(BookRequestDto bookRequestDto, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Book book = bookMapper.toBook(bookRequestDto);
@@ -110,7 +115,7 @@ public class BookService {
 
     public Integer updateShareableStatus(Integer bookId, Authentication connectedUser) throws IllegalOperationException {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new EntityNotFoundException("Book not found with id: "+bookId));
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!book.getOwner().getId().equals(user.getId())){
             throw new IllegalOperationException("You are not the owner of this book");
@@ -122,7 +127,7 @@ public class BookService {
 
     public Integer updateArchivedStatus(Integer bookId, Authentication connectedUser) throws IllegalOperationException {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new EntityNotFoundException("Book not found with id: "+bookId));
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
         User user = (User) connectedUser.getPrincipal();
         if(!book.getOwner().getId().equals(user.getId())){
             throw new IllegalOperationException("You are not the owner of this book");
@@ -134,14 +139,68 @@ public class BookService {
 
     public Integer borrowBook(Integer bookId, Authentication connectedUser) throws OperationNotPermittedException, IllegalOperationException {
         Book book = bookRepository.findById(bookId).orElseThrow(
-                () -> new EntityNotFoundException("Book not found with id: "+bookId));
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
+        if(book.isArchived() || !book.isShareable()){
+            throw new OperationNotPermittedException("Book is not available for borrowing");
+        }
+        User user = (User) connectedUser.getPrincipal();
+        if(book.getOwner().getId().equals(user.getId())){
+            throw new IllegalOperationException("You can´t borrow your own book");
+        }
+        final boolean isBorrowed = bookTransactionRepository.isAlreadyBorrowedByUser(bookId, user.getId());
+        if(isBorrowed){
+            throw new OperationNotPermittedException("Book is already borrowed");
+        }
+        BookTransactionHistory bookTransactionHistory = BookTransactionHistory
+                .builder()
+                .book(book)
+                .user(user)
+                .returned(false)
+                .returnApproved(false)
+                .build();
+        return bookTransactionRepository.save(bookTransactionHistory).getId();
+    }
+
+    public Integer returnBorrowedBook(Integer bookId, Authentication connectedUser) throws OperationNotPermittedException, IllegalOperationException {
+        Book book = bookRepository.findById(bookId).orElseThrow(
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
+        if(book.isArchived() || !book.isShareable()){
+            throw new OperationNotPermittedException("Book is not available for borrowing");
+        }
+        User user = (User) connectedUser.getPrincipal();
+        if(book.getOwner().getId().equals(user.getId())){
+            throw new IllegalOperationException("You can´t borrow your own book");
+        }
+        BookTransactionHistory bookTransactionHistory = bookTransactionRepository
+                .findBookTransactionByBookIdAndUserId(bookId, user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Book not borrowed by user"));
+        bookTransactionHistory.setReturned(true);
+        return bookTransactionRepository.save(bookTransactionHistory).getId();
+    }
+
+    public Integer approveReturnBorrowedBook(Integer bookId, Authentication connectedUser) throws OperationNotPermittedException, IllegalOperationException {
+        Book book = bookRepository.findById(bookId).orElseThrow(
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
         if(book.isArchived() || !book.isShareable()){
             throw new OperationNotPermittedException("Book is not available for borrowing");
         }
         User user = (User) connectedUser.getPrincipal();
         if(!book.getOwner().getId().equals(user.getId())){
-            throw new IllegalOperationException("You are not the owner of this book");
+            throw new IllegalOperationException("You can´t approve the return of a book you do not own");
         }
-        boolean isBorrowed = bookTransactionRepository.isAlreadyBorrowedByUser(bookId, user.getId());
+        BookTransactionHistory bookTransactionHistory = bookTransactionRepository
+                .findBookTransactionByBookIdAndOwnerId(bookId, user.getId())
+                .orElseThrow(() -> new EntityNotFoundException("The book is not returned yet. You cannot approve its return"));
+        bookTransactionHistory.setReturnApproved(true);
+        return bookTransactionRepository.save(bookTransactionHistory).getId();
+    }
+
+    public void uploadBookCoverPicture(Integer bookId, MultipartFile file, Authentication connectedUser) {
+        Book book = bookRepository.findById(bookId).orElseThrow(
+                () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));
+        User user = (User) connectedUser.getPrincipal();
+        var bookCover = fileStorageService.saveFile(file, user.getId());
+        book.setBookCover(bookCover);
+        bookRepository.save(book);
     }
 }
