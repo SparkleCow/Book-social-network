@@ -4,7 +4,11 @@ import com.sparklecow.book.dto.feedback.FeedbackRequestDto;
 import com.sparklecow.book.dto.feedback.FeedbackResponseDto;
 import com.sparklecow.book.entities.book.Book;
 import com.sparklecow.book.entities.feedback.Feedback;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class FeedbackMapper {
     public Feedback toFeedback(FeedbackRequestDto feedbackRequestDto, Book book) {
         return Feedback.builder()

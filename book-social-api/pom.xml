@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.sparklecow</groupId>
-	<artifactId>book-social</artifactId>
+	<artifactId>book-social-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>book-social</name>
+	<name>book-social-api</name>
 	<description>Book social network project</description>
 	<url/>
 	<licenses>

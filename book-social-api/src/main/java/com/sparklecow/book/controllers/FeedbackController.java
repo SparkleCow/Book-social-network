@@ -9,17 +9,15 @@ import com.sparklecow.book.services.feedback.FeedbackService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/feedback")
 @RequiredArgsConstructor
 @Tag(name = "Feedback")
+@CrossOrigin("*")
 public class FeedbackController {
 
     private final FeedbackService feedbackService;

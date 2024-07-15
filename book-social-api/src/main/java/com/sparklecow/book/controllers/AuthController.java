@@ -2,6 +2,7 @@ package com.sparklecow.book.controllers;
 
 import com.sparklecow.book.dto.user.UserLoginDto;
 import com.sparklecow.book.dto.user.UserRegisterDto;
+import com.sparklecow.book.dto.user.UserResponseDto;
 import com.sparklecow.book.exceptions.ExpiredTokenException;
 import com.sparklecow.book.exceptions.RoleNameNotFoundException;
 import com.sparklecow.book.exceptions.TokenNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Tag(name = "Authentication", description = "Authentication management endpoints")
+@CrossOrigin("*")
 public class AuthController {
     private final AuthenticationService authenticationService;
 
@@ -29,8 +31,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDto userLoginDto){
-        return ResponseEntity.ok(authenticationService.login(userLoginDto));
+    public ResponseEntity<UserResponseDto> login(@RequestBody UserLoginDto userLoginDto){
+        return ResponseEntity.ok(UserResponseDto
+                .builder()
+                .token(authenticationService.login(userLoginDto))
+                .build());
     }
 
     @PostMapping("/validate")
