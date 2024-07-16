@@ -1,3 +1,14 @@
 .code{
     width: 400px;
 }
+
+.container{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.activate-message, .activate-error{
+    text-align: center;
+}

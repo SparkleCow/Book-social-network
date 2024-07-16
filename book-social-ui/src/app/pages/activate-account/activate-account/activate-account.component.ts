@@ -16,6 +16,25 @@ export class ActivateAccountComponent {
   constructor(private _router:Router, private _authenticationService:AuthenticationService){}
 
   onCodeCompleted(token: string) {
-    throw new Error('Method not implemented.');
+    this.confirmAccount(token);
+  }
+
+  confirmAccount(token:string){
+    this._authenticationService.validate({token: token}).subscribe({
+      next: () => {
+        this.message = "Your account has been sucessfully activated"
+        this.submitted = true;
+        this.isOkay = true;
+      },
+      error: () => {
+        this.message = "Activation failed. Token has been expired or invalid";
+        this.submitted = true;
+        this.isOkay = false;
+      }
+    })
+  }
+
+  returnToLogin() {
+    this._router.navigate(["login"]);
   }
 }
