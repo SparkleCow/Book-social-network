@@ -1,16 +1,27 @@
-.login-form{
+.register-form{
     width: 800px !important; 
-    margin-top: 15%;
+    margin-top: 10%;
+}
+
+.register-form-error{
+    width: 800px !important; 
+    margin-top: 3%;
 }
 
 @media (max-width: 850px) {
-    .login-form{
+    .register-form{
+        width: 600px !important;
+    }
+    .register-form-error{
         width: 600px !important;
     }
 }
 
 @media (max-width: 650px) {
-    .login-form{
+    .register-form{
+        width: 400px !important;
+    }
+    .register-form-error{
         width: 400px !important;
     }
     .register-information{

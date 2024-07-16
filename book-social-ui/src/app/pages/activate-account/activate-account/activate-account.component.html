@@ -1,0 +1,15 @@
+<div class="container" *ngIf="submitted else codeForm"></div>
+
+<ng-template #codeForm>
+    <div class="container">
+        <div class="text-center code">
+            <h2>Type your code activation</h2>
+            <code-input [isCodeHidden]="false"
+                        [codeLength]="6"
+                        [code]="'number'"
+                        (codeCompleted)="onCodeCompleted($event)">
+
+            </code-input>
+        </div>
+    </div>
+</ng-template>

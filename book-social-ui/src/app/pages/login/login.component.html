@@ -5,14 +5,14 @@
         <p *ngFor="let error of errorMsg">{{error}}</p>
     </div>
     <label for="login" class="form-label my-2">Email</label>
-    <input [(ngModel)]="userLogin.email" type="email" class="form-control" id="login">
+    <input [(ngModel)]="userLogin.email" type="email" class="form-control" id="login" placeholder="email@example.com">
     <label for="password" class="form-label my-2">Password</label>
-    <input [(ngModel)]="userLogin.password" type="password" class="form-control" id="password">
+    <input [(ngModel)]="userLogin.password" type="password" class="form-control" id="password" placeholder="Password">
     <div class="d-flex justify-content-between my-5">
         <button (click)="login()" type="button" class="btn btn-primary">
             <em class="fas fa-sign-in-alt">&nbsp; Login</em>        
         </button>
-        <div>
+        <div class="register-information">
             Dont have an account yet? &nbsp;
             <button (click)="register()" type="button" class="btn btn-link">Register</button>
         </div>

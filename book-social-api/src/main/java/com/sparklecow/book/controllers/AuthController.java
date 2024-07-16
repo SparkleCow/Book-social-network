@@ -10,6 +10,7 @@ import com.sparklecow.book.exceptions.ValidatedTokenException;
 import com.sparklecow.book.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +20,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Tag(name = "Authentication", description = "Authentication management endpoints")
-@CrossOrigin("*")
 public class AuthController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<HttpStatus> register(@RequestBody UserRegisterDto userRegisterDto) throws MessagingException,
+    public ResponseEntity<HttpStatus> register(@Valid @RequestBody UserRegisterDto userRegisterDto) throws MessagingException,
                                                                                              RoleNameNotFoundException {
         authenticationService.register(userRegisterDto);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> login(@RequestBody UserLoginDto userLoginDto){
+    public ResponseEntity<UserResponseDto> login(@Valid @RequestBody UserLoginDto userLoginDto){
         return ResponseEntity.ok(UserResponseDto
                 .builder()
                 .token(authenticationService.login(userLoginDto))
