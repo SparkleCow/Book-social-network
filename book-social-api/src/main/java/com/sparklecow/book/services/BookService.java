@@ -15,6 +15,7 @@ import com.sparklecow.book.services.file.FileStorageService;
 import com.sparklecow.book.services.mappers.BookMapper;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookService {
     private static final String CREATED_DATE = "createdDate";
@@ -53,6 +55,7 @@ public class BookService {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<Book> books = bookRepository.findAllDisplayableBooks(user.getId(), pageable);
+        System.out.println(bookRepository.findAllDisplayableBooks(user.getId(), pageable));
         List<BookResponseDto> bookResponse = books.stream().map(bookMapper::toBookResponseDto).toList();
         return new PageResponse<>(
                 bookResponse,

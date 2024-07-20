@@ -32,7 +32,7 @@ application:
   security:
     jwt:
       secret-key: 50a9c2491945272656e05eccdd90cd7242b16e24e16c3b6bbb158b77c1fc0c9b
-      expiration: 604800
+      expiration: 86400000
   mailing:
     activation-url: http://localhost:4200/activate-account
   upload-service:

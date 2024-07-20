@@ -1,5 +1,6 @@
 package com.sparklecow.book.config.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,31 +30,43 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     @NotNull HttpServletResponse response,
                                     @NotNull FilterChain filterChain) throws ServletException, IOException {
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if(request.getServletPath().contains("/api/auth")){
+        if (request.getServletPath().contains("/auth")) {
             filterChain.doFilter(request, response);
             return;
         }
-        if(jwtToken == null || !jwtToken.startsWith("Bearer ")){
+        if (jwtToken == null || !jwtToken.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
         String token = jwtToken.substring(7);
-        String username = jwtUtils.extractUsername(token);
+        String username;
+        try {
+            username = jwtUtils.extractUsername(token);
+        } catch (ExpiredJwtException e) {
+            handleException(response, "Token has expired", HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if(userDetails == null || !jwtUtils.validateToken(token, userDetails)){
+        if (userDetails == null || !jwtUtils.validateToken(token, userDetails)) {
             filterChain.doFilter(request, response);
             return;
         }
-        if(SecurityContextHolder.getContext().getAuthentication() != null){
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
             filterChain.doFilter(request, response);
             return;
         }
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities());
+                userDetails,
+                null,
+                userDetails.getAuthorities());
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
+    }
+
+    private void handleException(HttpServletResponse response, String message, int statusCode) throws IOException {
+        response.setStatus(statusCode);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\": \"" + message + "\"}");
     }
 }

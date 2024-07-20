@@ -1,6 +1,7 @@
 package com.sparklecow.book.controllers;
 
 import com.sparklecow.book.exceptions.*;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -92,8 +93,8 @@ public class ControllerAdvice {
                         .build());
     }
 
-    @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity<ExceptionResponse> handleExpiredTokenException(ExpiredTokenException e){
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ExceptionResponse> handleExpiredJwtException(ExpiredJwtException e){
         return ResponseEntity
                 .status(TOKEN_EXPIRED.getHttpStatus())
                 .body(ExceptionResponse.builder()

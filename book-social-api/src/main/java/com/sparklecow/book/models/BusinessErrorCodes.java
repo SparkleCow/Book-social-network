@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public enum BusinessErrorCodes {
 
     NO_CODE(0, HttpStatus.NOT_IMPLEMENTED, "No code"),
-    USER_NOT_FOUND(404, HttpStatus.NOT_FOUND, "User not found"),
+    USER_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Email / password is incorrect"),
     TOKEN_NOT_FOUND(404, HttpStatus.NOT_FOUND, "Token not found"),
     BAD_CREDENTIALS(400, HttpStatus.UNAUTHORIZED, "Email / password is incorrect"),
     ACCOUNT_LOCKED(423, HttpStatus.LOCKED, "User account is locked"),

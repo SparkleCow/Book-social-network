@@ -3,13 +3,13 @@ import { BrowserModule, provideClientHydration } from '@angular/platform-browser
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { ActivateAccountComponent } from './pages/activate-account/activate-account/activate-account.component';
 import { CodeInputModule } from 'angular-code-input';
-import { BookModule } from './modules/book/book.module';
+import { AuthInterceptor } from './services/interceptors/http-token.interceptor';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,9 @@ import { BookModule } from './modules/book/book.module';
     CodeInputModule
   ],
   providers: [
-    provideClientHydration()],
+    provideClientHydration(),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

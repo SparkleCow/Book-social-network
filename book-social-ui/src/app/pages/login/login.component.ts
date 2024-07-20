@@ -28,7 +28,9 @@ export class LoginComponent {
         console.log(err);
         if (err.error && err.error.errors) {
           this.errorMsg = err.error.errors.map((e: any) => e.defaultMessage);
-        } else {
+        }else if(err.error.businessErrorDescription) {
+          this.errorMsg = [err.error.businessErrorDescription];
+        }else{
           this.errorMsg = ['An unexpected error occurred.'];
         }
       }
