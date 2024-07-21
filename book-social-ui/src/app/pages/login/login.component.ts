@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { UserLoginDto, UserResponseDto } from '../../services/models';
 import { AuthenticationService } from '../../services/services';
 import { Router } from '@angular/router';
-import { error } from 'console';
 import { TokenService } from '../../services/services/token.service';
 
 @Component({

@@ -22,7 +22,7 @@ public class ControllerAdvice {
                 .status(MESSAGE_ERROR.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(MESSAGE_ERROR.getErrorCode())
-                        .businessErrorDescription(MESSAGE_ERROR.getMessage())
+                        .businessErrorDescription(MESSAGE_ERROR.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -33,7 +33,7 @@ public class ControllerAdvice {
                 .status(ACCOUNT_DISABLED.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(ACCOUNT_DISABLED.getErrorCode())
-                        .businessErrorDescription(ACCOUNT_DISABLED.getMessage())
+                        .businessErrorDescription(ACCOUNT_DISABLED.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -44,7 +44,7 @@ public class ControllerAdvice {
                 .status(BAD_CREDENTIALS.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BAD_CREDENTIALS.getErrorCode())
-                        .businessErrorDescription(BAD_CREDENTIALS.getMessage())
+                        .businessErrorDescription(BAD_CREDENTIALS.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -55,7 +55,7 @@ public class ControllerAdvice {
                 .status(USER_NOT_FOUND.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(USER_NOT_FOUND.getErrorCode())
-                        .businessErrorDescription(USER_NOT_FOUND.getMessage())
+                        .businessErrorDescription(USER_NOT_FOUND.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -66,7 +66,7 @@ public class ControllerAdvice {
                 .status(ROLE_NOT_FOUND.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(ROLE_NOT_FOUND.getErrorCode())
-                        .businessErrorDescription(ROLE_NOT_FOUND.getMessage())
+                        .businessErrorDescription(ROLE_NOT_FOUND.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -77,7 +77,7 @@ public class ControllerAdvice {
                 .status(TOKEN_NOT_FOUND.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(TOKEN_NOT_FOUND.getErrorCode())
-                        .businessErrorDescription(TOKEN_NOT_FOUND.getMessage())
+                        .businessErrorDescription(TOKEN_NOT_FOUND.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -88,7 +88,7 @@ public class ControllerAdvice {
                 .status(TOKEN_ALREADY_VALIDATE.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(TOKEN_ALREADY_VALIDATE.getErrorCode())
-                        .businessErrorDescription(TOKEN_ALREADY_VALIDATE.getMessage())
+                        .businessErrorDescription(TOKEN_ALREADY_VALIDATE.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -99,7 +99,7 @@ public class ControllerAdvice {
                 .status(TOKEN_EXPIRED.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(TOKEN_EXPIRED.getErrorCode())
-                        .businessErrorDescription(TOKEN_EXPIRED.getMessage())
+                        .businessErrorDescription(TOKEN_EXPIRED.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -110,7 +110,7 @@ public class ControllerAdvice {
                 .status(BAD_CREDENTIALS.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(BAD_CREDENTIALS.getErrorCode())
-                        .businessErrorDescription(BAD_CREDENTIALS.getMessage())
+                        .businessErrorDescription(BAD_CREDENTIALS.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }
@@ -121,7 +121,18 @@ public class ControllerAdvice {
                 .status(ILLEGAL_OPERATION.getHttpStatus())
                 .body(ExceptionResponse.builder()
                         .businessErrorCode(ILLEGAL_OPERATION.getErrorCode())
-                        .businessErrorDescription(ILLEGAL_OPERATION.getMessage())
+                        .businessErrorDescription(ILLEGAL_OPERATION.getMessage() + " " +e.getMessage())
+                        .message(e.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(OperationNotPermittedException.class)
+    public ResponseEntity<ExceptionResponse> handleOperationNotPermittedException(OperationNotPermittedException e){
+        return ResponseEntity
+                .status(ILLEGAL_OPERATION.getHttpStatus())
+                .body(ExceptionResponse.builder()
+                        .businessErrorCode(ILLEGAL_OPERATION.getErrorCode())
+                        .businessErrorDescription(ILLEGAL_OPERATION.getMessage() + " " +e.getMessage())
                         .message(e.getMessage())
                         .build());
     }

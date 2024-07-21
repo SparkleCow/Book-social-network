@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PageResponseBookResponseDto } from '../../../../services/models/page-response-book-response-dto';
 import { BookService } from '../../../../services/services/book.service';
 import { Router } from '@angular/router';
+import { BookResponseDto } from '../../../../services/models';
 
 @Component({
   selector: 'app-book-list',
@@ -11,7 +12,7 @@ import { Router } from '@angular/router';
 export class BookListComponent implements OnInit {
   bookResponse: PageResponseBookResponseDto = {};
   page = 0;
-  size = 5;
+  size = 3;
   pages: any = [];
   message = '';
   level: 'success' | 'error' = 'success';
@@ -66,5 +67,33 @@ export class BookListComponent implements OnInit {
 
   get isLastPage() {
     return this.page === this.bookResponse.totalPages as number - 1;
+  }
+
+  borrowBook(book: BookResponseDto) {
+    this.message = '';
+    this.level = 'success';
+    this.bookService.borrowBook({
+      id: book.id as number
+    }).subscribe({
+      next: () => {
+        this.level = 'success';
+        this.message = 'Book successfully added to your list';
+      },
+      error: (err) => {
+        console.log(err);
+        this.level = 'error';
+        this.message = this.extractRelevantMessage(err.error.businessErrorDescription);
+      }
+    });
+  }
+
+  displayBookDetails(book: BookResponseDto) {
+    this.router.navigate(['books', 'details', book.id]);
+  }
+
+  private extractRelevantMessage(message: string): string {
+    const relevantPart = 'The requested book';
+    const startIndex = message.indexOf(relevantPart);
+    return startIndex !== -1 ? message.substring(startIndex) : message;
   }
 }
