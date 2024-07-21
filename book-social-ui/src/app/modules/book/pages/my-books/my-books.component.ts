@@ -14,17 +14,13 @@ export class MyBooksComponent implements OnInit {
   size = 5;
   pages: any = [];
 
-  constructor(
-    private bookService: BookService,
-    private router: Router
-  ) {
-  }
+  constructor(private bookService: BookService,private router: Router){}
 
-  ngOnInit(): void {
+  ngOnInit(): void{
     this.findAllBooks();
   }
 
-  private findAllBooks() {
+  private findAllBooks(){
     this.bookService.findBooksByOwner({
       page: this.page,
       size: this.size
@@ -39,36 +35,36 @@ export class MyBooksComponent implements OnInit {
       });
   }
 
-  gotToPage(page: number) {
+  gotToPage(page: number){
     this.page = page;
     this.findAllBooks();
   }
 
-  goToFirstPage() {
+  goToFirstPage(){
     this.page = 0;
     this.findAllBooks();
   }
 
-  goToPreviousPage() {
+  goToPreviousPage(){
     this.page --;
     this.findAllBooks();
   }
 
-  goToLastPage() {
+  goToLastPage(){
     this.page = this.bookResponse.totalPages as number - 1;
     this.findAllBooks();
   }
 
-  goToNextPage() {
+  goToNextPage(){
     this.page++;
     this.findAllBooks();
   }
 
-  get isLastPage() {
+  get isLastPage(){
     return this.page === this.bookResponse.totalPages as number - 1;
   }
 
-  archiveBook(book: BookResponseDto) {
+  archiveBook(book: BookResponseDto){
     this.bookService.updateArchivedStatus({
       id: book.id as number
     }).subscribe({
@@ -78,7 +74,7 @@ export class MyBooksComponent implements OnInit {
     });
   }
 
-  shareBook(book: BookResponseDto) {
+  shareBook(book: BookResponseDto){
     this.bookService.updateShareableStatus({
       id: book.id as number
     }).subscribe({
@@ -88,7 +84,7 @@ export class MyBooksComponent implements OnInit {
     });
   }
 
-  editBook(book: BookResponseDto) {
+  editBook(book: BookResponseDto){
     this.router.navigate(['books', 'manage', book.id]);
   }
 }
