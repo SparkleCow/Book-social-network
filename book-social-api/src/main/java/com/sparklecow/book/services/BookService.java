@@ -55,7 +55,6 @@ public class BookService {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<Book> books = bookRepository.findAllDisplayableBooks(user.getId(), pageable);
-        System.out.println(bookRepository.findAllDisplayableBooks(user.getId(), pageable));
         List<BookResponseDto> bookResponse = books.stream().map(bookMapper::toBookResponseDto).toList();
         return new PageResponse<>(
                 bookResponse,
@@ -84,7 +83,8 @@ public class BookService {
         );
     }
 
-    public PageResponse<BorrowedBookResponse> findBooksBorrowed(Integer page, Integer size, Authentication connectedUser) {
+    //Method for return all books borrowed by user.
+    public PageResponse<BorrowedBookResponse> findBooksBorrowedByUser(Integer page, Integer size, Authentication connectedUser) {
         User user = (User) connectedUser.getPrincipal();
         Pageable pageable = PageRequest.of(page, size, Sort.by(CREATED_DATE).descending());
         Page<BookTransactionHistory> histories = bookTransactionRepository.findBooksBorrowed(user.getId(), pageable);
@@ -140,6 +140,9 @@ public class BookService {
         return bookId;
     }
 
+    /*Method allows borrow a book.
+    Firstly it validate if the book is shareable, otherwise it will send an error
+    On the other hand, it will validate if the user is the book's owner, in that case it will throw an error*/
     public Integer borrowBook(Integer bookId, Authentication connectedUser) throws OperationNotPermittedException, IllegalOperationException {
         Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new EntityNotFoundException(BOOK_NOT_FOUND+bookId));

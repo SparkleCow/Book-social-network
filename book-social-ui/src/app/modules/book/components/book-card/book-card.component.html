@@ -1,15 +1,14 @@
 <div
-  class="card border-2"
+  class="card border-1 mx-3"
   style="width: 20rem;"
   [class.border-success]="book.shareable"
-  [class.border-warning]="book.archived"
->
-  <img height="200" [src]="bookCover" class="card-img-top" alt="...">
-  <div class="card-body overflow-scroll">
-    <h5 class="card-title fs-6 text-nowrap fw-bold mb-1"><i class="fa-solid fa-book"></i>&nbsp;{{book.title}}</h5>
-    <h5 class="card-subtitle fs-6 text-secondary mb-1"><i class="fa-solid fa-user-check"></i>&nbsp;{{ book.authorName }}</h5>
-    <h6 class="card-subtitle fs-6 text-secondary mb-1"><i class="fas fa-code"></i>&nbsp;{{ book.isbn }}</h6>
-    <h6 class="card-subtitle fs-6 text-secondary"><i class="fas fa-user"></i>&nbsp;{{ book.owner }}</h6>
+  [class.border-warning]="book.archived">
+  <img height="200" [src]="bookCover" class="card-img-top" alt="Book picture">
+  <div class="card-body">
+    <h5 class="card-title fs-6 text-nowrap fw-bold mb-4">{{book.title}}</h5>
+    <h5 class="card-subtitle fs-6 text-secondary mb-2"><i class="fa-solid fa-user-check"></i>&nbsp;{{book.authorName}}</h5>
+    <h6 class="card-subtitle fs-6 text-secondary mb-2"><i class="fas fa-code"></i>&nbsp;{{book.isbn}}</h6>
+    <h6 class="card-subtitle fs-6 text-secondary"><i class="fas fa-user"></i>&nbsp;{{book.owner}}</h6>
     <hr>
     <p class="card-text">{{book.synopsis}}</p>
   </div>

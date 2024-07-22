@@ -12,7 +12,7 @@ import { BookResponseDto } from '../../../../services/models';
 export class BookListComponent implements OnInit {
   bookResponse: PageResponseBookResponseDto = {};
   page = 0;
-  size = 3;
+  size = 4;
   pages: any = [];
   message = '';
   level: 'success' | 'error' = 'success';

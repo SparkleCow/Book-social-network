@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
 })
 export class MyBooksComponent implements OnInit {
   bookResponse: PageResponseBookResponseDto = {};
+  withoutBooksCreated: boolean = false
   page = 0;
-  size = 5;
+  size = 4;
   pages: any = [];
 
   constructor(private bookService: BookService,private router: Router){}
@@ -31,6 +32,9 @@ export class MyBooksComponent implements OnInit {
           this.pages = Array(this.bookResponse.totalPages)
             .fill(0)
             .map((x, i) => i);
+          if(!books.content || books.content.length == 0){
+            this.withoutBooksCreated = true;
+          }
         }
       });
   }

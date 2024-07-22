@@ -12,14 +12,13 @@ import { ManageBookComponent } from './pages/manage-book/manage-book.component';
 import { FormsModule } from '@angular/forms';
 import { BorrowedBooksComponent } from './pages/borrowed-books/borrowed-books.component';
 
-
 @NgModule({
   declarations: [
     MainComponent,
     MenuComponent,
     BookListComponent,
     BookCardComponent,
-    RatingComponent,
+    RatingComponent,    
     MyBooksComponent,
     ManageBookComponent,
     BorrowedBooksComponent

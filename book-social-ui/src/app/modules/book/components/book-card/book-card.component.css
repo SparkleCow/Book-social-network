@@ -1,3 +1,21 @@
 i{
     cursor: pointer;
 }
+
+.card > img:hover{
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.card:hover{
+    background-color: rgb(233, 233, 233);
+}
+
+.card-title{
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.card-body{
+    min-height: 45vh;
+}

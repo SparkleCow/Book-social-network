@@ -60,7 +60,7 @@ public class BookController {
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             Authentication connectedUser
     ){
-        return ResponseEntity.ok(bookService.findBooksBorrowed(page, size, connectedUser));
+        return ResponseEntity.ok(bookService.findBooksBorrowedByUser(page, size, connectedUser));
     }
 
     @GetMapping("/returned")

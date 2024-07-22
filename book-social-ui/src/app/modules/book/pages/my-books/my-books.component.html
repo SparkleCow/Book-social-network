@@ -1,11 +1,12 @@
-<h3>My books list</h3>
+<h3 class="my-4">My books list</h3>
 <hr>
-<div class="d-flex justify-content-end mb-3">
-  <a routerLink="/books/manage" class="btn btn-outline-primary">
-    <i class="fas fa-plus"></i>&nbsp;New book
-  </a>
+<div class="no-content container-fluid d-flex justify-content-center align-items-center" *ngIf="withoutBooksCreated">
+  <div class="alert"
+    [class.alert-danger]="withoutBooksCreated">
+    You don't have any books created yet.
+  </div>
 </div>
-<div class="d-flex justify-content-start gap-4 flex-wrap">
+<div class="d-flex justify-content-center gap-4 flex-wrap mt-5" *ngIf="!withoutBooksCreated">
   <app-book-card
     *ngFor="let book of bookResponse.content"
     [book]="book"
@@ -15,7 +16,7 @@
     (edit)="editBook($event)"
   ></app-book-card>
 </div>
-<div class="d-flex justify-content-center mt-3">
+<div class="d-flex justify-content-center mt-5" *ngIf="!withoutBooksCreated">
   <nav aria-label="Page navigation example">
     <ul class="pagination">
       <li class="page-item">
