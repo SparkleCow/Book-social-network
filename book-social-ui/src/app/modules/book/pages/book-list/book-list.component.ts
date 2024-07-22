@@ -92,8 +92,11 @@ export class BookListComponent implements OnInit {
   }
 
   private extractRelevantMessage(message: string): string {
-    const relevantPart = 'The requested book';
-    const startIndex = message.indexOf(relevantPart);
-    return startIndex !== -1 ? message.substring(startIndex) : message;
+    const prefix = 'Illegal operation';
+    if (message.startsWith(prefix)) {
+      return message.substring(prefix.length);
+    } else {
+      return message;
+    }
   }
 }

@@ -10,8 +10,8 @@ public record BookRequestDto(
         @NotNull(message = "Author name is required")
         @NotEmpty(message = "Author name cannot be empty")
         String authorName,
-        @NotNull
-        @NotEmpty
+        @NotNull(message = "ISBN cat not be null")
+        @NotEmpty(message = "ISBN cat not be empty")
         String isbn,
         @NotNull(message = "Synopsis is required")
         @NotEmpty(message = "Synopsis cannot be empty")

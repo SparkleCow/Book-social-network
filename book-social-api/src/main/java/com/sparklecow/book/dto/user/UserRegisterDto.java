@@ -18,7 +18,7 @@ public record UserRegisterDto(
         @Email(message = "Invalid email format")
         String email,
         @NotBlank(message = "Password is mandatory")
-        @Size(min = 8)
+        @Size(min = 8, message = "Password must be at least 8 characters")
         String password,
         @NotNull(message = "Date of birth is mandatory")
         LocalDate dateOfbirth

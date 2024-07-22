@@ -63,8 +63,9 @@ export class ManageBookComponent implements OnInit{
         });
       },
       error: (err) => {
-        console.log(err.error);
-        this.errorMsg = err.error.validationErrors;
+        console.log(err.error.errors);
+        this.errorMsg = err.error.errors.map((x: any) => x.defaultMessage);
+        console.log(this.errorMsg);
       }
     });
   }

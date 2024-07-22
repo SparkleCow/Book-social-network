@@ -4,9 +4,9 @@ import jakarta.validation.constraints.*;
 
 
 public record FeedbackRequestDto(
-        @Positive(message = "note has to be a positive number")
-        @Min(value = 0, message="note has to be higher than 0")
-        @Max(value = 5, message="note has to be lower than 5")
+        @Positive(message = "Note has to be a positive number")
+        @Min(value = 0, message = "Note has to be higher than 0")
+        @Max(value = 5, message = "Note has to be lower than 5")
         Double note,
         @NotNull(message = "Comment cannot be null")
         @NotEmpty(message = "Comment cannot be empty")
