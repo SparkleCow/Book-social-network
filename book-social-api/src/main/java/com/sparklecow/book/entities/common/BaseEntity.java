@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @MappedSuperclass
 public class BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -29,7 +28,7 @@ public class BaseEntity {
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
     @CreatedBy
-    @Column(insertable = false, updatable = false)
+    @Column(nullable = false, updatable = false)
     private Integer createdBy;
     @LastModifiedBy
     @Column(insertable = false)

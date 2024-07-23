@@ -1,6 +1,6 @@
 package com.sparklecow.book.config.security;
 
-import com.sparklecow.book.config.ApplicationAuditAware;
+import com.sparklecow.book.config.auditing.ApplicationAuditAware;
 import com.sparklecow.book.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

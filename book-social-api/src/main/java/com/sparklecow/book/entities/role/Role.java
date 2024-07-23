@@ -24,7 +24,6 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "roles")
 public class Role {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

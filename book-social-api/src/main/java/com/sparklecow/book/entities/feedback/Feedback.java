@@ -20,7 +20,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "feedbacks")
 public class Feedback extends BaseEntity {
-
     private Double note;
     private String comment;
     @ManyToOne

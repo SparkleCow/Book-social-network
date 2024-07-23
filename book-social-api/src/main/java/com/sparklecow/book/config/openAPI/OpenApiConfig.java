@@ -1,4 +1,4 @@
-package com.sparklecow.book.config;
+package com.sparklecow.book.config.openAPI;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;

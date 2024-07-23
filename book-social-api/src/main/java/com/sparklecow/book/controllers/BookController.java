@@ -26,7 +26,7 @@ public class BookController {
     @PostMapping
     public ResponseEntity<Integer> saveBook(
             @Valid @RequestBody BookRequestDto bookRequestDto,
-            Authentication connectedUser) {
+            Authentication connectedUser) throws IllegalOperationException {
         return ResponseEntity.ok(bookService.saveBook(bookRequestDto, connectedUser));
     }
 

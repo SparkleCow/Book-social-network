@@ -38,9 +38,19 @@ public class BookService {
     private final BookMapper bookMapper;
     private final FileStorageService fileStorageService;
 
-    public Integer saveBook(BookRequestDto bookRequestDto, Authentication connectedUser) {
+    public Integer saveBook(BookRequestDto bookRequestDto, Authentication connectedUser) throws IllegalOperationException {
         User user = (User) connectedUser.getPrincipal();
-        Book book = bookMapper.toBook(bookRequestDto);
+        Book book;
+        if(bookRequestDto.id() != null){
+            book = bookRepository.findById(bookRequestDto.id()).orElseThrow(() -> new EntityNotFoundException(BOOK_NOT_FOUND + bookRequestDto.id()));
+            if(!user.getId().equals(book.getOwner().getId())){
+                throw new IllegalOperationException("You are not the owner of this book. You can't update it");
+            }
+            Book newBook = bookMapper.toBookUpdated(bookRequestDto);
+            newBook.setOwner(user);
+            return bookRepository.save(newBook).getId();
+        }
+        book = bookMapper.toBook(bookRequestDto);
         book.setOwner(user);
         return bookRepository.save(book).getId();
     }

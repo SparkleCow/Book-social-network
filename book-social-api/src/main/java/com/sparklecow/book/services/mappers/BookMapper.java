@@ -51,4 +51,16 @@ public class BookMapper {
                 .returnApproved(bookTransactionHistory.isReturnApproved())
                 .build();
     }
+
+    public Book toBookUpdated(BookRequestDto bookRequestDto) {
+        return Book.builder()
+                .id(bookRequestDto.id())
+                .title(bookRequestDto.title())
+                .authorName(bookRequestDto.authorName())
+                .synopsis(bookRequestDto.synopsis())
+                .archived(false)
+                .shareable(bookRequestDto.shareable())
+                .isbn(bookRequestDto.isbn())
+                .build();
+    }
 }
