@@ -41,7 +41,7 @@ public class User implements UserDetails, Principal {
     @Column(unique = true)
     private String email;
     private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles = new ArrayList<>();
     private LocalDate dateOfbirth;
     @CreatedDate
@@ -52,7 +52,7 @@ public class User implements UserDetails, Principal {
     private LocalDateTime lastModifiedDate;
     private boolean enabled;
     private boolean accountLocked;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
     @OneToMany(mappedBy = "user")
     private List<BookTransactionHistory> bookTransactionHistories = new ArrayList<>();
@@ -99,5 +99,23 @@ public class User implements UserDetails, Principal {
 
     public String getFullName() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                ", dateOfbirth=" + dateOfbirth +
+                ", createdDate=" + createdDate +
+                ", lastModifiedDate=" + lastModifiedDate +
+                ", enabled=" + enabled +
+                ", accountLocked=" + accountLocked +
+                ", bookTransactionHistories=" + bookTransactionHistories +
+                '}';
     }
 }
